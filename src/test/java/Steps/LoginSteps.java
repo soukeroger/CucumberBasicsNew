@@ -1,10 +1,16 @@
 package Steps;
 
 import Base.BaseUtil;
+import Transformation.EmailTransform;
+import Transformation.SalaryCountTransformer;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import org.junit.Assert;
+import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +36,20 @@ public class LoginSteps extends BaseUtil {
     public void iNavigateToTheLoginPage() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
 
-        System.out.println("The driver is : " + base.StepInfo);
-
         System.out.println("I should see userform page");
+        base.Driver.navigate().to("http://www.executeautomation.com/demosite/Login.html");
     }
 
     @And("^I click the login button$")
     public void iClickTheLoginButton() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        System.out.println("Navigate login page");
+        base.Driver.findElement(By.name("Login")).submit();
     }
 
     @Then("^I should see the userform page$")
     public void iShouldSeeTheUserformPage() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        System.out.println("I click button");
+        Assert.assertEquals( "It's not displayed", base.Driver.findElement(By.id("Initial")).isDisplayed(), true);
     }
 
 
@@ -58,8 +63,8 @@ public class LoginSteps extends BaseUtil {
         users = table.asList(User.class);
 
         for (User user : users) {
-            System.out.println("The UserName is" + user.username);
-            System.out.println("The Password is" + user.password);
+           base.Driver.findElement(By.name("UserName")).sendKeys(user.username);
+            base.Driver.findElement(By.name("Password")).sendKeys(user.password);
         }
 
     }
@@ -70,6 +75,20 @@ public class LoginSteps extends BaseUtil {
 //        throw new PendingException();
         System.out.println("UserName is : " + userName);
         System.out.println("Password is : " + password);
+    }
+
+    @And("^I enter the users email address as Email:([^\"]*)$")
+    public void iEnterTheUsersEmailAddressAsEmailAdmin(@Transform(EmailTransform.class) String email) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+
+        System.out.println("The Email Address is" + email);
+
+    }
+
+    @And("^I verify the count of my salary digits for Rs (\\d+)$")
+    public void iVerifyTheCountOfMySalaryDigitsForRs(@Transform(SalaryCountTransformer.class) int salary) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        System.out.println("My salary digits count is:" + salary);
     }
 
     public class User {
