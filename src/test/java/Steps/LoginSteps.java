@@ -11,6 +11,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import pages.LoginPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,9 @@ public class LoginSteps extends BaseUtil {
     @And("^I click the login button$")
     public void iClickTheLoginButton() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        base.Driver.findElement(By.name("Login")).submit();
+//        base.Driver.findElement(By.name("Login")).submit();
+        LoginPage page = new LoginPage(base.Driver);
+        page.ClickLogin();
     }
 
     @Then("^I should see the userform page$")
@@ -62,9 +65,12 @@ public class LoginSteps extends BaseUtil {
 //     Store all the users
         users = table.asList(User.class);
 
+        LoginPage page = new LoginPage(base.Driver);
+
         for (User user : users) {
-           base.Driver.findElement(By.name("UserName")).sendKeys(user.username);
-            base.Driver.findElement(By.name("Password")).sendKeys(user.password);
+            page.Login(user.username, user.password);
+
+
         }
 
     }
